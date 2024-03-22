@@ -1,0 +1,28 @@
+--------------PARA PORTFOLIO Y PF----------
+---STOCK NO SE ACTUALIZA EN EL MOMENTO AL AGREGAR PRODUCT (SE MODIFICAN SOLAMENTE CUANBDO CONFIRMO LA COMPRA)---
+---MANEJO DE ERRORES, (como en addproductIncart) CONTROLAR EN TODO EL PROYECTO PARA LA ENTREGA FINAL, CUANDO ESTOY AL PEDO IR HACIENDO LOS DETALLES----
+------MODIFICAR Y CORREGIR LOS STATUS CODES DE RESPUESTASS----
+-----SWAGGER CORREGIR Y PULIR-----
+-----PROBAR TODO DESDE POSTMAN-----
+---CAMBIAR EL BACK, Y PONER CATALOGO DE BOTINES, EN PROYECTO DE JS----
+
+--TESTING POR COSAS MAS PUNTUALES ( !!!!   ERRORES   !!! ETC)
+---TESTING (RUTAS SIN TEST)----
+-logeo con github
+-reestablecer contrasñea
+-cambio de rol de usuario => premiun
+-support
+-mokking
+-test logger
+-errorHandleabars
+-purchase
+
+
+
+------PARA PF------( Voy a ajustar y pulir todo lo que sea consigna primero, luego si quiero ir a portafolio habra que mejorar mas cosas)
+
+Anoto todas las cosas que voy corrigiendo.
+
+-SECURITTY ACCES CON FETCH, SOLUCIONADO, SEGUIR CON MANEJO DE ERRORES
+
+-Doc Swagger ( solo metodo get y post de products, y post de addProductCart)
