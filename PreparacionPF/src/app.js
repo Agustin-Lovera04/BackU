@@ -18,7 +18,7 @@ import { errorHandler } from "./middlewares/errorHandler.js";
 import { middleLogg } from "./utils/winstonLogger.js";
 import swaggerJsdoc from 'swagger-jsdoc'
 import swaggerUI from 'swagger-ui-express'
-
+import handlebarsHelpers from 'handlebars-helpers';
 
 const PORT = config.PORT;
 
@@ -65,10 +65,10 @@ app.engine(
       allowProtoPropertiesByDefault: true,
       allowProtoMethodsByDefault: true,
     },
+    helpers: handlebarsHelpers(), // Usa los helpers de Handlebars
   })
-  );
-  
-  
+);
+
   app.set("view engine", "handlebars");
   app.set("views", `${__dirname}/views`);
   
@@ -77,7 +77,7 @@ app.engine(
 app.use("/api/products", productManagerRouter);
 app.use("/api/carts", cartManagerRouter);
 app.use('/api/sessions', sessionsManagerRouter)
-app.use('/api/users/premiun', userManagerRouter)
+app.use('/api/users', userManagerRouter)
 app.use("/", viewsRouter);
 
 app.use(errorHandler)

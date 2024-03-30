@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { productsModel } from "../dao/models/productsModel.js";
-import { passportCall, securityAcces } from "../utils.js";
+import { passportCall, securityAcces, validDocsMiddleware } from "../utils.js";
 import { currentDTO } from "../DTO/currentDTO.js";
 import { ProductsController } from "../controller/productsController.js";
 import { CartsController } from "../controller/cartsController.js";
@@ -12,13 +12,6 @@ import { UserController } from "../controller/userController.js";
 
 export const router = Router();
 
-/* export const auth =(req,res,next)=>{
-  if(!req.session.user){
-    res.redirect('/login?error=Debes iniciar sesion para acceder a la web')
-  }
-  next()
-}
- */
 router.get("/", async (req, res) => {
   try {
     res.status(200).render("index");
@@ -36,7 +29,6 @@ router.get('/registro',(req,res)=>{
 
 router.get('/login',(req,res)=>{
   let {error, message} = req.query 
-  
   res.status(200).render('login', {error, message});
 });
 
@@ -132,7 +124,7 @@ router.get('/purchase/:tid',passportCall('jwt'), securityAcces(["public"]), asyn
 
 /* CAMBIO USER ==> PREMIUN */
 
-router.get('/api/users/premiun/:uid', passportCall('jwt'), securityAcces(["public"]),async (req,res)=>{
+router.get('/api/users/premiun/:uid', passportCall('jwt'), securityAcces(["public"]),validDocsMiddleware,async (req,res)=>{
   try {
     let user = await UserController.getUserById(req)
     if(!user){
@@ -144,6 +136,21 @@ router.get('/api/users/premiun/:uid', passportCall('jwt'), securityAcces(["publi
     return res.status(500).json({error: error.message})
   }
 })
+
+
+router.get('/users/premiun/:uid/documents', passportCall('jwt'),securityAcces(["user", "admin", "premiun"]) /* ,midle de validacion si ya cargo docs ,*/,async(req,res)=>{
+  try {
+    let user = await UserController.getUserById(req)
+    if(!user){
+    let error  =  CustomError.CustomError('ERROR ARGUMENTOS', 'NO SE ENCONTRO USUARIO CON EL ID INGRESADO', STATUS_CODES.ERROR_ARGUMENTOS, ERRORES_INTERNOS.ARGUMENTOS)
+      return res.render('errorHandlebars', {error})
+    }
+    res.render('userDocs', {user})
+  } catch (error) {
+    
+  }
+})
+
 router.get('/restablecerPass',(req,res)=>{
   let {error, message} = req.query 
 
@@ -163,6 +170,7 @@ router.get('/support', passportCall('jwt'),securityAcces(["admin"]),(req,res)=>{
 /* ERROR HANDLEBAR GENERAL */
 router.get('/errorHandlebars', securityAcces(["public"]),(req,res)=>{
  let {error} = req.query
+ console.log(error)
   res.render('errorHandlebars', {error})
 })
 router.get('/mockingproducts', passportCall('jwt'),securityAcces(["admin"]), async(req,res)=>{

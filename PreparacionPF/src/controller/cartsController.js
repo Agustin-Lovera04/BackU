@@ -60,9 +60,6 @@ export class CartsController {
 
   static async addProductInCart(req, res) {
     try {
-/*       console.log('ACAAAAAAAAAAAAAAAAAAAAAAAA')
-      console.log(req.body)
-      let quantity = req.body.quantityProd */
       let { cid } = req.params;
       let valid = idValid(cid, res);
       if (valid) {
@@ -80,12 +77,6 @@ export class CartsController {
       if (!product) {
         return res.status(404).json({
           error: 'ERROR AL RECUPERAR PRODUCTO'
-        });
-      }
-  
-      if(product.stock <= 0){
-        return res.status(400).json({
-          error: 'NO HAY STOCK'
         });
       }
   
@@ -135,25 +126,21 @@ export class CartsController {
       let { cid } = req.params;
       let valid = idValid(cid, res);
       if (valid) {
-        console.log("cid invalido");
-        return null;
+        return res.status(404).json({ error: "ID invalido" });
       }
       let { pid } = req.params;
       let validpid = idValid(pid, res);
       if (validpid) {
-        console.log("pid invalido");
-        return null;
+        return res.status(404).json({ error: "ID invalido" });
       }
       const product = await productsService.getProductById(pid);
       if (!product) {
-        console.log("error en recuperacion de producto");
-        return null;
+        return res.status(404).json({ error: "error al recuperar producto" });
       }
   
       let cartMod = await cartsService.deleteProductInCart(cid, product);
       if (!cartMod) {
-        console.log("fallo el borrado de producto");
-        return null;
+        return res.status(404).json({ error: "Producto inexistente en carrito. ERROR" });
       }
       console.log("carro modificado: " + cartMod);
       return res.status(200).json({ cartMod });
@@ -167,14 +154,12 @@ static async deleteAllProductsInCart(req,res){
     let { cid } = req.params;
     let valid = idValid(cid, res);
     if (valid) {
-      console.log("cid invalido");
-      return null;
+      return res.status(404).json({ error: "ID invalido" });
     }
 
     let cartMod = await cartsService.deleteAllProductsInCart(cid);
     if (!cartMod) {
-      console.log("fallo el borrado de producto");
-      return null;
+      return res.status(404).json({ error: "Inexistencia de productos en carrito. Error" });
     }
     console.log("carro modificado: " + cartMod);
     return res.status(200).json({ cartMod });
@@ -188,7 +173,7 @@ static async deleteAllProductsInCart(req,res){
       let { id } = req.params;
       let valid = idValid(id);
       if (valid) {
-        return null;
+        return res.status(404).json({ error: "ID invalido" });
       }
   
       console.log('body en router: '+req.body)
@@ -214,14 +199,12 @@ static async modifiedProductInCart(req,res){
     let { cid } = req.params;
     let valid = idValid(cid, res);
     if (valid) {
-      console.log("cid invalido");
-      return null;
+      return res.status(404).json({ error: "ID invalido" });
     }
     let { pid } = req.params;
     let validpid = idValid(pid, res);
     if (validpid) {
-      console.log("pid invalido");
-      return null;
+      return res.status(404).json({ error: "ID invalido" });
     }
 
     let quantity
@@ -235,14 +218,13 @@ static async modifiedProductInCart(req,res){
 
     const product = await productsService.getProductById(pid);
     if (!product) {
-      console.log("error en recuperacion de producto");
-      return null;
+      return res.status(404).json({ error: "PRODUCTO INEXISTENTE EN CARRITO" });
+
     }
 
     let cartMod = await cartsService.modifiedProductInCart(cid, product, quantity);
     if (!cartMod) {
-      console.log("fallo la modificacion de producto");
-      return null;
+      return res.status(404).json({ error: "Algo salio mal- Intente mas tarde" });
     }
     console.log("carro modificado: " + cartMod);
     return res.status(200).json({ cartMod });
@@ -257,20 +239,17 @@ static async confirmBuy(req, res) {
     let { cid } = req.params;
     let valid = idValid(cid, res);
     if (valid) {
-      console.log("cid invalido");
-      return null;
+      return res.status(404).json({ error: "ID invalido" });
     }
 
     let cart = await cartsService.getCartById(cid);
 
     if (!cart) {
-      console.log('Fallo al obtener el carrito');
-      return null;
+      return res.status(404).json({ error: "Error al recuperar el carrito" });
     }
 
     if (!cart.products || cart.products.length === 0) {
-      console.log('El carrito está vacío');
-      return null;
+      return res.status(404).json({ error: "Carrito Vacio" });
     }
 
     let prodOK = [];
@@ -288,8 +267,7 @@ static async confirmBuy(req, res) {
         prodOK.push(p);
         let prodMod = await productsService.updateProduct(p.product._id, { stock: stock });
         if (!prodMod) {
-          console.log('Error al actualizar stock');
-          return null;
+          return res.status(404).json({ error: "ERROR INTERNO AL ACTUALIZAR STOCK" });
         }
       }
     }
@@ -297,8 +275,7 @@ static async confirmBuy(req, res) {
     for (const prod of prodOK) {
       let clearCart = await cartsService.deleteProductInCart(cid, prod.product._id);
       if (!clearCart) {
-        console.log('Error al eliminar producto del carrito');
-        return null;
+        return res.status(404).json({ error: "ERROR AL ACTUALIZAR CARRITO" });
       }
     }
 
@@ -311,8 +288,7 @@ static async confirmBuy(req, res) {
     let ticket = await ticketService.createTicket({code: v4(),amount:total, purchaser: user.email});
     req.ticket =ticket
     if (!ticket) {
-      console.log('Error al crear el ticket');
-      return null;
+      return res.status(404).json({ error: "error al generar ticket" });
     }
     
     return res.status(200).json({ ticket:ticket });
