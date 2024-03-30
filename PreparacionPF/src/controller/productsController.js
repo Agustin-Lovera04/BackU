@@ -156,13 +156,16 @@ export class ProductsController {
       } = req.params;
       let valid = idValid(id);
       if (valid) {
-        return null;
+        return res.status(400).json({
+          error: "NO SE ENCONTRO PRODUCTO"
+        });
       }
   
       let getProductById = await productsService.getProductById(id);
       if (!getProductById) {
-        console.log("Error en busqueda por ID");
-        return null;
+        return res.status(400).json({
+          error: "NO SE ENCONTRO PRODUCTO"
+        });
       }
   
       if (req.body._id) {
@@ -201,13 +204,16 @@ static async deleteProduct(req,res){
     } = req.params;
     let valid = idValid(id);
     if (valid) {
-      return null;
+      return res.status(400).json({
+        error: "NO SE ENCONTRO PRODUCTO"
+      });
     }
 
     let getProductById = await productsService.getProductById(id);
     if (!getProductById) {
-      console.log("Error en busqueda por ID");
-      return null;
+      return res.status(400).json({
+        error: "NO SE ENCONTRO PRODUCTO"
+      });
     }
     if(req.user.rol !== "Admin"){
       if(req.user.email !== getProductById.owner){
