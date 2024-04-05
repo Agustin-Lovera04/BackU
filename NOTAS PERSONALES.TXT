@@ -2,12 +2,15 @@ OJOOOOOOO QUE ELIMINE MANAGER MONGO, PROBAR TODO SI SIGUEN ANDANDO......
 -----HAY UN ENDPOINT POST EN VIEWSROUTER /USER controlar que es porque no se--
 
 EN PROCESO:
-- Seccion 7, punto 16- Modificar Usuario admin - OK, y hardcod github a .env
+
 
 
 ------PARA PF------( Voy a ajustar y pulir todo lo que sea consigna primero, luego si quiero ir a portafolio habra que mejorar mas cosas)
 
 Anoto todas las cosas que voy corrigiendo.
+
+
+- Seccion 7, punto 16- Modificar Usuario admin - OK, y hardcod github a .env
 
 -Testing endpoint requeridos completos ( inicio del proyecto - OK, alta producto - OK, alta carrito - OK, logio - OK, registro usuario - OK, inserción de productos en un carrito - OK)
 

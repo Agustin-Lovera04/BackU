@@ -15,4 +15,6 @@ export const config ={
     clientID: process.env.clientID,
     clientSecret: process.env.clientSecret,
     callbackURL: process.env.callbackURL,
+    UMAILER: process.env.EMAIL_USER,
+    PMAILER: process.env.EMAIL_PASS
 }
