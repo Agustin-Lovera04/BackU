@@ -46,9 +46,9 @@ export class UserDAO {
 
   async getUser(email) {
     try {
-
       let user = await userModel.findOne({ email }).lean()
       if (!user) {
+  
         return null;
       }
       return user;

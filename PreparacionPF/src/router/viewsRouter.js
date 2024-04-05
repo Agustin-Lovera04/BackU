@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { productsModel } from "../dao/models/productsModel.js";
-import { passportCall, securityAcces, validDocsMiddleware } from "../utils.js";
+import { genToken, passportCall, securityAcces, validDocsMiddleware } from "../utils.js";
 import { currentDTO } from "../DTO/currentDTO.js";
 import { ProductsController } from "../controller/productsController.js";
 import { CartsController } from "../controller/cartsController.js";
@@ -34,6 +34,13 @@ router.get('/login',(req,res)=>{
 
 router.get('/current',passportCall('jwt'),securityAcces(["public"]),async(req,res)=>{
   let user = req.user
+  if(!user.first_name){
+  user = user._doc
+  res.clearCookie('CookieUser')
+  let token = await genToken(user)
+  res.cookie('CookieUser', token, { httpOnly: true, maxAge: 1000 * 60 * 60 });
+  return res.status(200).render('perfil', {user});
+}
   user = await currentDTO(user)
   res.status(200).render('perfil', {user});
 

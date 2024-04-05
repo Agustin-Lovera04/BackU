@@ -138,3 +138,16 @@ if(!user){
     }
   }
 }
+
+export const existDoc = async (req, res, next) =>{
+  if(!req.file){
+    let error = CustomError.CustomError(
+      "NO AUTORIZADO",
+      "DEBE ENVIAR DOCUMENTOS",
+      STATUS_CODES.ERROR_AUTENTICACION,
+      ERRORES_INTERNOS.PERMISOS
+    );
+    return res.status(404).json({error: error.message})
+  }
+  next()
+}

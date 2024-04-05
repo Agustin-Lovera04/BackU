@@ -23,7 +23,7 @@ try {
 
 router.post('/login', passportCall('login'), async (req, res) => {
   if (req.error) {
-      return res.redirect(`/login/?error=${req.error}`);
+      return res.status(400).redirect(`/login/?error=${req.error}`);
   }
   let id = req.user._id
   let last_connection = await UserController.last_connection(req,res,id)
@@ -50,9 +50,18 @@ router.get('/callbackGithub',passportCall('github'),
 
   router.get('/logout',passportCall('jwt'),async(req,res)=>{
     let id = req.user._id
+    if(!req.user._id || req.user._id === undefined){
+      let user = await UserController.getUser(req,res,req.user.email)
+      if(!user){
+        let error  =  CustomError.CustomError('ERROR', 'ERROR AL RECUPERAR USUARIO', STATUS_CODES.ERROR_DATOS_ENVIADOS, ERRORES_INTERNOS.ARGUMENTOS)
+        return res.status(404).render('errorHandlebars', { error })
+      }
+      id = user._id
+    }
     let last_connection = await UserController.last_connection(req,res,id)
     let error  =  CustomError.CustomError('ERROR SERVER', 'ERROR INTERNO', STATUS_CODES.ERROR_SERVER, ERRORES_INTERNOS.DATABASE)
-    if(!last_connection){ return res.status(404).render('errorHandlebars', { error })
+    if(!last_connection){
+      return res.status(404).render('errorHandlebars', { error })
   }
     res.clearCookie('CookieUser')
     res.redirect('/login')
